@@ -18,3 +18,6 @@ test('Site navigation targets resolve to existing files',()=>{for(const p of ['i
 
 test('Pricing demo presets are available',()=>{const html=fs.readFileSync(path.join(root,'tools/pricing-simulator/index.html'),'utf8');assert.match(html,/id="example-digital"/);assert.match(html,/id="example-physical"/);assert.match(html,/function preset\(data\)/)});
 test('CSV analyzer has first-time sample workflow',()=>{const html=fs.readFileSync(path.join(root,'tools/csv-analyzer/index.html'),'utf8');assert.match(html,/サンプルデータで試す/);assert.match(html,/初めての方は/)});
+
+test('Tool structured metadata is valid and free',()=>{for(const p of ['tools/csv-analyzer/index.html','tools/pricing-simulator/index.html']){const html=fs.readFileSync(path.join(root,p),'utf8');const match=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);assert.ok(match,p);const meta=JSON.parse(match[1]);assert.equal(meta['@type'],'WebApplication');assert.equal(meta.offers.price,'0');assert.ok(meta.url.startsWith('https://ogb-umalab.github.io/'))}});
+test('Homepage links to both tools and guides',()=>{const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const target of ['tools/csv-analyzer/','tools/pricing-simulator/','guides/csv-analysis-basics/','guides/pricing-profit-basics/'])assert.ok(html.includes('href="'+target+'"'),target)});
