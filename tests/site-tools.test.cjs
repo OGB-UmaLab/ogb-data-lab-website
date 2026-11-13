@@ -21,3 +21,20 @@ test('CSV analyzer has first-time sample workflow',()=>{const html=fs.readFileSy
 
 test('Tool structured metadata is valid and free',()=>{for(const p of ['tools/csv-analyzer/index.html','tools/pricing-simulator/index.html']){const html=fs.readFileSync(path.join(root,p),'utf8');const match=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);assert.ok(match,p);const meta=JSON.parse(match[1]);assert.equal(meta['@type'],'WebApplication');assert.equal(meta.offers.price,'0');assert.ok(meta.url.startsWith('https://ogb-umalab.github.io/'))}});
 test('Homepage links to both tools and guides',()=>{const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const target of ['tools/csv-analyzer/','tools/pricing-simulator/','guides/csv-analysis-basics/','guides/pricing-profit-basics/'])assert.ok(html.includes('href="'+target+'"'),target)});
+
+test('Internal links on key pages point to existing files',()=>{
+ const pages=['index.html','tools/index.html','tools/csv-analyzer/index.html','tools/pricing-simulator/index.html','guides/csv-analysis-basics/index.html','guides/pricing-profit-basics/index.html'];
+ for(const page of pages){
+  const html=fs.readFileSync(path.join(root,page),'utf8');
+  for(const match of html.matchAll(/href="([^"]+)"/g)){
+   const href=match[1];
+   if(/^(?:https?:|mailto:|tel:|#|javascript:|data:)/i.test(href))continue;
+   const pathname=href.split(/[?#]/)[0];
+   if(!pathname)continue;
+   const resolved=path.resolve(root,path.dirname(page),decodeURIComponent(pathname));
+   assert.ok(resolved.startsWith(root+path.sep)||resolved===root,'Link stays inside repository: '+page+' '+href);
+   const file=fs.existsSync(resolved)&&fs.statSync(resolved).isDirectory()?path.join(resolved,'index.html'):resolved;
+   assert.ok(fs.existsSync(file),'Broken link: '+page+' -> '+href);
+  }
+ }
+});
