@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ogb-umalab.github.io/ogb-data-lab-website/sitemap.xml
