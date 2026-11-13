@@ -1,14 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/about/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/approach/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/research/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/research/blitz-index/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/organization/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/tools/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/tools/csv-analyzer/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/tools/pricing-simulator/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/guides/csv-analysis-basics/</loc></url>
-  <url><loc>https://ogb-umalab.github.io/ogb-data-lab-website/guides/pricing-profit-basics/</loc></url>
-</urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>
