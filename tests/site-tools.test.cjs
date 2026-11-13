@@ -53,3 +53,9 @@ test('GA4 tool interaction events do not include entered data',()=>{
  assert.ok(html.includes('gtag("event","tool_interaction",{tool_name:'),page);
  }
 });
+
+test('Research page lists three real development cases with working tool links',()=>{
+ const html=fs.readFileSync(path.join(root,'research/index.html'),'utf8');
+ for(const label of ['CASE 01','CASE 02','CASE 03','CSV自動分析・グラフ作成ツール','販売価格・利益の逆算シミュレーター'])assert.ok(html.includes(label),label);
+ for(const target of ['../tools/csv-analyzer/','../tools/pricing-simulator/']){assert.ok(html.includes('href="'+target+'"'),target);assert.ok(fs.existsSync(path.resolve(root,'research',target,'index.html')),target)}
+});
