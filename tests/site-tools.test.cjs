@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 const root = path.resolve(__dirname,'..');
-function scriptOf(file){const html=fs.readFileSync(path.join(root,file),'utf8');const m=html.match(/<script>([\s\S]*?)<\/script>/);assert.ok(m,'inline script found: '+file);return m[1]}
+function scriptOf(file){const html=fs.readFileSync(path.join(root,file),'utf8');const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(x=>x[1]);assert.ok(scripts.length,'inline script found: '+file);return scripts.find(x=>x.includes('"use strict"'))||scripts[scripts.length-1]}
 function contextFor(file,cut,els={}){const src=scriptOf(file);assert.ok(src.includes(cut),'script cut marker exists');const context=vm.createContext({document:{createElement:()=>({textContent:'',append(){},appendChild(){}}),getElementById:id=>els[id]||(els[id]={value:'',textContent:'',replaceChildren(){},append(){},appendChild(){}})},console,Number,Math,Array,TextDecoder,Blob});vm.runInContext(src.slice(0,src.indexOf(cut)),context,{timeout:2000});return context}
 test('CSV parser accepts quoted comma, quoted newline and escaped quote',()=>{const c=contextFor('tools/csv-analyzer/index.html','$("file").onchange');const rows=vm.runInContext('parseCSV("a,b\\n\\\"x,y\\\",2\\n\\\"line1\\nline2\\\",\\\"a\\\"\\\"b\\\"")',c);assert.deepEqual(JSON.parse(JSON.stringify(rows)),[['a','b'],['x,y','2'],['line1\nline2','a"b']])});
 test('CSV parser rejects unterminated quote',()=>{const c=contextFor('tools/csv-analyzer/index.html','$("file").onchange');assert.throws(()=>vm.runInContext('parseCSV("\\"abc")',c),/引用符/)});
