@@ -43,3 +43,13 @@ test('Every public HTML page has exactly one correct GA4 tag',()=>{
  const pages=['404.html','about/index.html','approach/index.html','guides/csv-analysis-basics/index.html','guides/pricing-profit-basics/index.html','index.html','organization/index.html','research/blitz-index/index.html','research/index.html','tools/csv-analyzer/index.html','tools/index.html','tools/pricing-simulator/index.html'];
  for(const page of pages){const html=fs.readFileSync(path.join(root,page),'utf8');assert.equal((html.match(/gtag\('config','G-7KHMXV2NFC'\)/g)||[]).length,1,page);assert.ok(html.includes('googletagmanager.com/gtag/js?id=G-7KHMXV2NFC'),page)}
 });
+
+test('GA4 tool interaction events do not include entered data',()=>{
+ for(const [page,name,actions] of [['tools/pricing-simulator/index.html','pricing_simulator',['calculate','example_digital','example_physical']],['tools/csv-analyzer/index.html','csv_analyzer',['file_analyzed','sample_analyzed','export_csv','export_png']]]){
+ const html=fs.readFileSync(path.join(root,page),'utf8');
+ assert.ok(html.includes('tool_name:"'+name+'"'),page);
+ assert.ok(html.includes('tool_action:action'),page);
+ for(const action of actions)assert.ok(html.includes('trackTool("'+action+'")'),page+' '+action);
+ assert.ok(html.includes('gtag("event","tool_interaction",{tool_name:'),page);
+ }
+});
