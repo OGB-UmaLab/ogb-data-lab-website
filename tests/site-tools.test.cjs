@@ -38,3 +38,8 @@ test('Internal links on key pages point to existing files',()=>{
   }
  }
 });
+
+test('Every public HTML page has exactly one correct GA4 tag',()=>{
+ const pages=['404.html','about/index.html','approach/index.html','guides/csv-analysis-basics/index.html','guides/pricing-profit-basics/index.html','index.html','organization/index.html','research/blitz-index/index.html','research/index.html','tools/csv-analyzer/index.html','tools/index.html','tools/pricing-simulator/index.html'];
+ for(const page of pages){const html=fs.readFileSync(path.join(root,page),'utf8');assert.equal((html.match(/gtag\('config','G-7KHMXV2NFC'\)/g)||[]).length,1,page);assert.ok(html.includes('googletagmanager.com/gtag/js?id=G-7KHMXV2NFC'),page)}
+});
